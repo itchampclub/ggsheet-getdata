@@ -23,3 +23,6 @@
 
 
         
+Sheet ตัวอย่าง :
+
+        https://docs.google.com/spreadsheets/d/1CXD1DD3vcvUKOGJR5rXpKPEPbaghiKxIRGmorE3dkAc/edit
