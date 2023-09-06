@@ -29,32 +29,53 @@ select{
 
 <body>
 <center>
+  <div class="alert alert-danger" role="alert" id="lalert" hidden>
+    กรุณาระบุรหัสนักศึกษาให้ถูกต้อง!
+  </div>
+</br>
+</br>
+
 <h1>ระบบค้นหาตารางสอบ</h1>
 
 </br>
 
 </div>
 <div class="form-group mx-sm-3 mb-2">
-<input type="text" class="form-control" id="stdid" placeholder="ระบุรหัสนักศึกษา">
+<input class="w-50 p-3 text-center" type="text" class="form-control" id="stdid" placeholder="ระบุรหัสนักศึกษา">
 </div>
 <div class="collapse" id="collapseExample">
 </div>
 </br>
-<button type="button" class="btn btn-success" onclick="showData()">💻 ค้นหา</button>  
+
+
+<button class="btn btn-primary" type="button" id="btloading" disabled hidden>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  กำลังค้นหาข้อมูล...
+</button>
+
+<button type="button" class="btn btn-success" id="btsearch" onclick="lenc()">💻 ค้นหา</button>  
 &nbsp;&nbsp;&nbsp;&nbsp;
-<button type="button" class="btn btn-secondary" onclick="cleartb()">💻 ล้าง</button>
+<button type="button" class="btn btn-danger" id="btclear" onclick="cleartb()">🧹 ล้าง</button>
 </div>
 
 </br></br>
 </br></br>
 
-<table class="table table-bordered" id="mytb">
-  <thead>
-  <tr>
+<div class="card" id="cardid" hidden>
+  <div class="card-header">
+    <h3 class="card-title" id="fid"></h5>
+      <h5 class="card-title" id="nid"></h5>
+  </div>
+  <div class="card-body" >
+  </div>
+</div>
 
-    						  
-  <th scope="col">รหัสนักศึกษา</th>
-  <th scope="col">ชื่อ - นามสกุล</th>
+
+
+
+<table class="table table-bordered" id="mytb" hidden>
+  <thead>
+  <tr>					  
   <th scope="col">รหัสวิชา</th>
   <th scope="col">วันที่สอบ</th>
   <th scope="col">เวลาสอบ</th>
@@ -72,12 +93,36 @@ select{
 
 <script>
 
+function lenc(){
+  const x = document.getElementById("stdid").value;
+  if(x.length > 0 && !isNaN(x)){
+    document.getElementById("lalert").hidden=true;
+    showData();
+  }else{
+    document.getElementById("lalert").hidden=false;
+  }
+}
+
+
+
 function cleartb(){
   document.getElementById("ttbody").innerHTML = "";
+  document.getElementById("fid").innerHTML = "";
+  document.getElementById("nid").innerHTML = "";
+  document.getElementById("stdid").value = "";
+  document.getElementById("mytb").hidden=true;
+  document.getElementById("cardid").hidden=true;
+  document.getElementById("btloading").hidden=true;
+  document.getElementById("btsearch").hidden=false;
+  document.getElementById("btclear").hidden=false;
 }
 
 
 function showData() {
+  document.getElementById("btsearch").hidden=true;
+  document.getElementById("btclear").hidden=true;
+  document.getElementById("btloading").hidden=false;
+  
       try{
         x = document.getElementById("stdid").value;
         var xmlhttp = new XMLHttpRequest();
@@ -87,30 +132,34 @@ function showData() {
         xmlhttp.send();
             xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("mytb").hidden=false;
+          document.getElementById("cardid").hidden=false;
             var obj = JSON.parse(this.responseText);
         document.getElementById("ttbody").innerHTML = "";
+        document.getElementById("fid").innerHTML = x;
+        document.getElementById("nid").innerHTML = obj[0].col2;
+
+
 
 for (var i=0; i < obj.length; i++) {
 
+
 var newRow = document.createElement("tr");
-var newCell = document.createElement("th");
-var newCell1 = document.createElement("td");
+
 var newCellx = document.createElement("td");
 var newCell2 = document.createElement("td");
 var newCell3 = document.createElement("td");
 var newCell4 = document.createElement("td");
 var newCell5 = document.createElement("td");
 
-newCell.innerHTML = obj[i].col1
-newCell1.innerHTML = obj[i].col2
+
 newCellx.innerHTML = obj[i].col3
 newCell2.innerHTML = obj[i].col4
 newCell3.innerHTML = obj[i].col5
 newCell4.innerHTML = obj[i].col6
 newCell5.innerHTML = obj[i].col7
 
-newRow.append(newCell);
-newRow.append(newCell1);
+
 newRow.append(newCellx);
 newRow.append(newCell2);
 newRow.append(newCell3);
@@ -118,6 +167,9 @@ newRow.append(newCell4);
 newRow.append(newCell5);
 document.getElementById("ttbody").appendChild(newRow);
 }
+document.getElementById("btloading").hidden=true;
+document.getElementById("btclear").hidden=false;
+document.getElementById("btsearch").hidden=false;
 }
             }
       } catch {}
