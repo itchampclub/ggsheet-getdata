@@ -147,6 +147,7 @@ function lenc(){
   const x = document.getElementById("stdid").value;
   if(x.length > 0 && !isNaN(x)){
     document.getElementById("lalert").hidden=true;
+    document.getElementById("ttbody").innerHTML = "";
     showData();
   }else{
     document.getElementById("lalert").hidden=false;
