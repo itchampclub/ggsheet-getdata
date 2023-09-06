@@ -44,11 +44,11 @@ if(uuidfound){
   return ContentService.createTextOutput(JSON.stringify([
     {"col1": "ไม่พบข้อมูล",
     "col2": "ไม่พบข้อมูล",
-    "col3": "ไม่พบข้อมูล",
-    "col4": "ไม่พบข้อมูล",
-    "col5": "ไม่พบข้อมูล",
-    "col6": "ไม่พบข้อมูล",
-    "col7": "ไม่พบข้อมูล",
+    "col3": "-",
+    "col4": "-",
+    "col5": "-",
+    "col6": "-",
+    "col7": "-",
   }]) ).setMimeType(ContentService.MimeType.JSON); 
 }
 
