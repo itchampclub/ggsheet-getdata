@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400&display=swap" rel="stylesheet">
+<style>
+  
+h1, h5, th, tr, td, p, .btn, .progress-bar, .d-flex, .form-group, .modal{
+  font-family: 'Kodchasan', sans-serif;
+}
+select{
+        color:red;
+    }
+    option:not(first-child) {
+        color:red;
+    }
+    </style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integ>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" integ>
+<title>ระบบค้นหาตารางสอบ</title>
+</head>
+
+
+
+
+<body>
+<center>
+  <div class="alert alert-danger" role="alert" id="lalert" hidden>
+    กรุณาระบุรหัสนักศึกษาให้ถูกต้อง!
+  </div>
+</br>
+</br>
+
+<h1>ระบบค้นหาตารางสอบ</h1>
+
+</br>
+
+</div>
+<div class="form-group mx-sm-3 mb-2">
+<input class="w-50 p-3 text-center" type="text" class="form-control" id="stdid" placeholder="ระบุรหัสนักศึกษา">&nbsp;&nbsp;<button type="button" class="btn btn-info" id="btrand" onclick="rand()">🎯 สุ่มตัวอย่าง</button>  
+</div>
+<div class="collapse" id="collapseExample">
+</div>
+</br>
+
+
+<button class="btn btn-primary" type="button" id="btloading" disabled hidden>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  กำลังค้นหาข้อมูล...
+</button>
+
+<button type="button" class="btn btn-success" id="btsearch" onclick="lenc()">💻 ค้นหา</button>  
+&nbsp;&nbsp;&nbsp;&nbsp;
+<button type="button" class="btn btn-danger" id="btclear" onclick="cleartb()">🧹 ล้าง</button>
+</div>
+
+</br></br>
+</br></br>
+
+<div class="card" id="cardid" hidden>
+  <div class="card-header">
+    <h3 class="card-title" id="fid"></h5>
+      <h5 class="card-title" id="nid"></h5>
+  </div>
+  <div class="card-body" >
+  </div>
+</div>
+
+
+
+
+<table class="table table-bordered" id="mytb" hidden>
+  <thead>
+  <tr>					  
+  <th scope="col">รหัสวิชา</th>
+  <th scope="col">วันที่สอบ</th>
+  <th scope="col">เวลาสอบ</th>
+  <th scope="col">สนามสอบ</th>
+  <th scope="col">ห้องสอบ</th>
+  </tr>
+  </thead>
+  <tbody id="ttbody">
+  </tbody>
+  </table>
+
+
+
+</center>
+
+<script>
+
+
+
+function rand(){
+  var uuidjson = {
+        "uuid": [
+ {"n":"6511000022"},
+ {"n":"6521000122"},
+ {"n":"6611000070"},
+ {"n":"6611000089"},
+ {"n":"6611000137"},
+ {"n":"6611000146"},
+ {"n":"6021000024"},
+ {"n":"6411000159"},
+ {"n":"6411000177"},
+ {"n":"6421000044"},
+ {"n":"6521000092"},
+ {"n":"6521000104"},
+ {"n":"6611000016"},
+ {"n":"6611000128"},
+ {"n":"6611000155"},
+ {"n":"6521000047"},
+ {"n":"6611000119"},
+ {"n":"6411000038"},
+ {"n":"6411000047"},
+ {"n":"6411000056"},
+ {"n":"6411000131"},
+ {"n":"6421000026"},
+ {"n":"6511000031"},
+ {"n":"6521000056"},
+ {"n":"6521000113"},
+ {"n":"6611000098"},
+ {"n":"6611000100"},
+ {"n":"6611000034"},
+ {"n":"6611000043"},
+ {"n":"6611000052"},
+ {"n":"6611000061"},
+ {"n":"6421000017"},
+ {"n":"6521000010"},
+ {"n":"6611000025"}
+]
+    }
+
+    var random = uuidjson.uuid[Math.floor(Math.random() * uuidjson.uuid.length)];
+    document.getElementById("stdid").value = random.n;
+    lenc()
+    //console.log(random.n)
+}
+
+
+
+function lenc(){
+  const x = document.getElementById("stdid").value;
+  if(x.length > 0 && !isNaN(x)){
+    document.getElementById("lalert").hidden=true;
+    showData();
+  }else{
+    document.getElementById("lalert").hidden=false;
+  }
+}
+
+
+
+function cleartb(){
+  document.getElementById("ttbody").innerHTML = "";
+  document.getElementById("fid").innerHTML = "";
+  document.getElementById("nid").innerHTML = "";
+  document.getElementById("stdid").value = "";
+  document.getElementById("mytb").hidden=true;
+  document.getElementById("cardid").hidden=true;
+  document.getElementById("btloading").hidden=true;
+  document.getElementById("btsearch").hidden=false;
+  document.getElementById("btclear").hidden=false;
+  document.getElementById("btrand").hidden=false;
+}
+
+
+function showData() {
+  document.getElementById("btsearch").hidden=true;
+  document.getElementById("btclear").hidden=true;
+  document.getElementById("btrand").hidden=true;
+  document.getElementById("btloading").hidden=false;
+  
+      try{
+        x = document.getElementById("stdid").value;
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://script.google.com/macros/s/AKfycbxO_ELDR28avmbnmW7ZOsH-b4Kw1HN9SHofyP5YeMvgexliwXpPKy6YemQDmGdyh36M/exec";
+        var theUrl = url+"?uuid="+x;
+        xmlhttp.open('GET', theUrl);
+        xmlhttp.send();
+            xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("mytb").hidden=false;
+          document.getElementById("cardid").hidden=false;
+            var obj = JSON.parse(this.responseText);
+        document.getElementById("ttbody").innerHTML = "";
+        document.getElementById("fid").innerHTML = x;
+        document.getElementById("nid").innerHTML = obj[0].col2;
+
+
+
+for (var i=0; i < obj.length; i++) {
+
+
+var newRow = document.createElement("tr");
+
+var newCellx = document.createElement("td");
+var newCell2 = document.createElement("td");
+var newCell3 = document.createElement("td");
+var newCell4 = document.createElement("td");
+var newCell5 = document.createElement("td");
+
+
+newCellx.innerHTML = obj[i].col3
+newCell2.innerHTML = obj[i].col4
+newCell3.innerHTML = obj[i].col5
+newCell4.innerHTML = obj[i].col6
+newCell5.innerHTML = obj[i].col7
+
+
+newRow.append(newCellx);
+newRow.append(newCell2);
+newRow.append(newCell3);
+newRow.append(newCell4);
+newRow.append(newCell5);
+document.getElementById("ttbody").appendChild(newRow);
+}
+document.getElementById("btloading").hidden=true;
+document.getElementById("btclear").hidden=false;
+document.getElementById("btsearch").hidden=false;
+document.getElementById("btrand").hidden=false;
+}
+            }
+      } catch {}
+  }
+
+
+      
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+</html>
